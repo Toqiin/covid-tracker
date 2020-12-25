@@ -10,15 +10,27 @@ import { useEffect, useState } from 'react';
 import InfoBox from './InfoBox';
 import Map from './Map';
 import 'fontsource-roboto';
+import Table from './Table';
+import {sortData} from './util';
+import LineGraph from './LineGraph';
 
 
 function App() {
 
-  const [countries, setCountries] = useState(['USA', 'UK', 'India']);
+  const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
+  const [tableData, setTableData] = useState([]);
 
   // https://disease.sh/v3/covid-19/countries
+
+  useEffect(() => {
+    fetch("https://disease.sh/v3/covid-19/all")
+    .then(response => response.json())
+    .then(data => {
+      setCountryInfo(data);
+    });
+  }, []);
 
   // on component load, fetch country data in json format
   useEffect(() => {
@@ -33,6 +45,9 @@ function App() {
             value: country.countryInfo.iso2
           }
         ));
+        
+        const sortedData = sortData(data);
+        setTableData(sortedData);
         // update the countries state variable 
         setCountries(countries);
       });
@@ -44,8 +59,9 @@ function App() {
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
 
-    const url = countryCode === "worldwide" ? 'https://disease.sh/v3/covid-19/all' :
-    `https://disease.sh/v3/covid-19/countries/${countryCode}`;
+    const url = countryCode === "worldwide"
+    ? 'https://disease.sh/v3/covid-19/all'
+    : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
 
     await fetch(url)
     .then(response => response.json())
@@ -87,7 +103,9 @@ function App() {
       <Card className="app__right">
         <CardContent>
           <h3>Live Cases by Country</h3>
+          <Table countries={tableData} />
           <h3>Worldwide New Cases</h3>
+          <LineGraph />
         </CardContent>
       </Card>
     </div>
