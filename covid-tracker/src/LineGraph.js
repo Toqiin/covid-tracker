@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Line} from "react-chartjs-2";
 import numeral from "numeral";
 import {toTitleCase} from './util';
+import './LineGraph.css';
 
 const options = {
     legend: {
@@ -87,17 +88,17 @@ function LineGraph({casesType = 'cases'}) {
         <div className="linegraph">
             <h1>Im a graph</h1>
             {data?.length > 0 && (
-                <Line
-                    options={options}
-                    data={{
-                        datasets: [{
-                            label: toTitleCase(casesType),
-                            backgroundColor: "rgba(204, 16, 52, 0.5)",
-                            borderColor: "#CC1034",
-                            data: data
-                        }]
-                    }}
-                />
+                <Line className="graph"
+                options={options}
+                data={{
+                    datasets: [{
+                        label: toTitleCase(casesType),
+                        backgroundColor: "rgba(204, 16, 52, 0.5)",
+                        borderColor: "#CC1034",
+                        data: data
+                    }]
+                }}
+            />
             )}
             
         </div>

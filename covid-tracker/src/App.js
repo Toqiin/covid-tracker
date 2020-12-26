@@ -11,8 +11,9 @@ import InfoBox from './InfoBox';
 import Map from './Map';
 import 'fontsource-roboto';
 import Table from './Table';
-import {sortData} from './util';
+import { sortData } from './util';
 import LineGraph from './LineGraph';
+import "leaflet/dist/leaflet.css";
 
 
 function App() {
@@ -21,36 +22,38 @@ function App() {
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState([]);
+  const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796});
+  const [mapZoom, setMapZoom] = useState(3);
 
   // https://disease.sh/v3/covid-19/countries
 
   useEffect(() => {
     fetch("https://disease.sh/v3/covid-19/all")
-    .then(response => response.json())
-    .then(data => {
-      setCountryInfo(data);
-    });
+      .then(response => response.json())
+      .then(data => {
+        setCountryInfo(data);
+      });
   }, []);
 
   // on component load, fetch country data in json format
   useEffect(() => {
     const getCountriesData = async () => {
       await fetch("https://disease.sh/v3/covid-19/countries")
-      .then((response) => response.json())
-      .then((data) => {
-        // map each country object into a simpler object containing the name and abbreviation only
-        const countries = data.map((country) => (
-          {
-            name: country.country,
-            value: country.countryInfo.iso2
-          }
-        ));
-        
-        const sortedData = sortData(data);
-        setTableData(sortedData);
-        // update the countries state variable 
-        setCountries(countries);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          // map each country object into a simpler object containing the name and abbreviation only
+          const countries = data.map((country) => (
+            {
+              name: country.country,
+              value: country.countryInfo.iso2
+            }
+          ));
+
+          const sortedData = sortData(data);
+          setTableData(sortedData);
+          // update the countries state variable 
+          setCountries(countries);
+        });
     };
 
     getCountriesData();
@@ -60,15 +63,15 @@ function App() {
     const countryCode = event.target.value;
 
     const url = countryCode === "worldwide"
-    ? 'https://disease.sh/v3/covid-19/all'
-    : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
+      ? 'https://disease.sh/v3/covid-19/all'
+      : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
 
     await fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      setCountry(countryCode);
-      setCountryInfo(data);
-    })
+      .then(response => response.json())
+      .then(data => {
+        setCountry(countryCode);
+        setCountryInfo(data);
+      })
 
     // https://disease.sh/v3/covid-19/countries/[COUNTRY_CODE]
     // https://disease.sh/v3/covid-19/all
@@ -92,13 +95,13 @@ function App() {
         </div>
 
         <div className="app__stats">
-          <InfoBox title="COVID-19 Cases" cases={countryInfo.todayCases} total={countryInfo.cases}/>
-          <InfoBox title="Recovered Cases" cases={countryInfo.todayRecovered} total={countryInfo.recovered}/>
-          <InfoBox title="Deaths" cases={countryInfo.todayDeaths} total={countryInfo.deaths}/>
+          <InfoBox title="COVID-19 Cases" cases={countryInfo.todayCases} total={countryInfo.cases} />
+          <InfoBox title="Recovered Cases" cases={countryInfo.todayRecovered} total={countryInfo.recovered} />
+          <InfoBox title="Deaths" cases={countryInfo.todayDeaths} total={countryInfo.deaths} />
         </div>
 
         {/* Map */}
-        <Map />
+        <Map center={mapCenter} zoom={mapZoom} />
       </div>
       <Card className="app__right">
         <CardContent>
