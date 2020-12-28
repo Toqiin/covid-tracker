@@ -19,8 +19,8 @@ body {
 }
 
 .app__right {
-  flex: 3;
-  padding-left: 40px;
+  width: 530px;
+  padding-left: 20px;
   padding-right: 20px;
 }
 
@@ -36,7 +36,7 @@ body {
   justify-content: space-between;
 }
 
-@media (max-width: 990px) {
+@media (max-width: 1440px) {
   .app {
     flex-direction: column;
   }
@@ -46,10 +46,12 @@ body {
   }
   
   .app__right {
-    padding-left: 20px;
+    margin: 0px;
+    padding: 0px;
     margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
   }
   
 }

@@ -2,3 +2,11 @@
     height: 300px;
     padding: 30px;
 }
+
+@media (max-width: 1440px) {
+    .linegraph {
+        padding: 0px;
+        padding-bottom: 30px;
+    }
+    
+}

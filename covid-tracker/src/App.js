@@ -24,6 +24,8 @@ function App() {
   const [tableData, setTableData] = useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796});
   const [mapZoom, setMapZoom] = useState(3);
+  const [graphSetting, setGraphSetting] = useState("cases");
+  const [totalSetting, setTotalSetting] = useState("daily");
 
   // https://disease.sh/v3/covid-19/countries
 
@@ -77,7 +79,17 @@ function App() {
     // https://disease.sh/v3/covid-19/all
   }
 
-  console.log(countryInfo);
+  const onGraphChange = (event) => {
+    const graphSettingValue = event.target.value;
+
+    setGraphSetting(graphSettingValue);
+
+  }
+
+  const onTotalDailyChange = (event) => {
+    const totalSettingValue = event.target.value;
+    setTotalSetting(totalSettingValue);
+  }
 
   return (
     <div className="app">
@@ -108,7 +120,19 @@ function App() {
           <h3>Live Cases by Country</h3>
           <Table countries={tableData} />
           <h3>Worldwide New Cases</h3>
-          <LineGraph />
+          <FormControl className="graph__case_type">
+            <Select variant="outlined" onChange={onGraphChange} value={graphSetting}>
+              <MenuItem value="cases">Cases</MenuItem>
+              <MenuItem value="deaths">Deaths</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl className="graph__total_or_daily">
+            <Select variant="outlined" onChange={onTotalDailyChange} value={totalSetting}>
+              <MenuItem value="total">Total</MenuItem>
+              <MenuItem value="daily">Daily Change</MenuItem>
+            </Select>
+          </FormControl>
+          <LineGraph casesType={graphSetting} timeType={totalSetting}/>
         </CardContent>
       </Card>
     </div>

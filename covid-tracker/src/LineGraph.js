@@ -48,41 +48,53 @@ const options = {
     }
 }
 
-function LineGraph({casesType = 'cases'}) {
+function LineGraph({casesType = 'cases', timeType = 'daily'}) {
 
     const [data, setData] = useState({});
-    // https://disease.sh/v3/covid-19/historical/all?lastdays=120
 
-    const buildChartData = (data, casesType='cases') => {
+    const buildChartData = (data, casesType, timeType) => {
         const chartData = [];
-        let lastDataPoint;
 
-        for(let date in data.cases) {
-            if (lastDataPoint) {
+        if (timeType === 'daily') {
+            console.log("here1")
+            let lastDataPoint;
+
+            for (let date in data.cases) {
+                if (lastDataPoint) {
+                    const newDataPoint = {
+                        x: date,
+                        y: data[casesType][date] - lastDataPoint
+                    };
+
+                    chartData.push(newDataPoint);
+                }
+
+                lastDataPoint = data[casesType][date];
+            }
+        } else if (timeType === 'total') {
+            console.log('here2');
+            for (let date in data.cases) {
                 const newDataPoint = {
                     x: date,
-                    y: data[casesType][date] - lastDataPoint
+                    y: data[casesType][date]
                 };
 
                 chartData.push(newDataPoint);
-            }    
-
-            lastDataPoint = data[casesType][date];
+            }
         }
 
-        console.log(chartData);
         return chartData;
+
     }
 
     useEffect(() => {
         fetch('https://disease.sh/v3/covid-19/historical/all?lastdays=420')
         .then(response => response.json())
         .then(data => {
-            console.log(data.cases);
-            const chartData = buildChartData(data);
+            const chartData = buildChartData(data, casesType, timeType);
             setData(chartData);
         })
-    }, [casesType]);
+    }, [casesType, timeType]);
 
     return (
         <div className="linegraph">
