@@ -36,6 +36,18 @@ body {
   justify-content: space-between;
 }
 
+.app__graph {
+  margin-top: 1rem;
+}
+
+.app__graph_options {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+}
+
+
+
 @media (max-width: 1440px) {
   .app {
     flex-direction: column;

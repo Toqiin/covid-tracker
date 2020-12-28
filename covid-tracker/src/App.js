@@ -26,6 +26,7 @@ function App() {
   const [mapZoom, setMapZoom] = useState(3);
   const [graphSetting, setGraphSetting] = useState("cases");
   const [totalSetting, setTotalSetting] = useState("daily");
+  const [timeSetting, setTimeSetting] = useState("all");
 
   // https://disease.sh/v3/covid-19/countries
 
@@ -91,6 +92,11 @@ function App() {
     setTotalSetting(totalSettingValue);
   }
 
+  const onTimeChange = (event) => {
+    const timeSettingValue = event.target.value;
+    setTimeSetting(timeSettingValue);
+  }
+
   return (
     <div className="app">
       <div className="app__left">
@@ -115,26 +121,44 @@ function App() {
         {/* Map */}
         <Map center={mapCenter} zoom={mapZoom} />
       </div>
-      <Card className="app__right">
-        <CardContent>
-          <h3>Live Cases by Country</h3>
-          <Table countries={tableData} />
-          <h3>Worldwide New Cases</h3>
-          <FormControl className="graph__case_type">
-            <Select variant="outlined" onChange={onGraphChange} value={graphSetting}>
-              <MenuItem value="cases">Cases</MenuItem>
-              <MenuItem value="deaths">Deaths</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl className="graph__total_or_daily">
-            <Select variant="outlined" onChange={onTotalDailyChange} value={totalSetting}>
-              <MenuItem value="total">Total</MenuItem>
-              <MenuItem value="daily">Daily Change</MenuItem>
-            </Select>
-          </FormControl>
-          <LineGraph casesType={graphSetting} timeType={totalSetting}/>
-        </CardContent>
-      </Card>
+      <div className="app__right">
+        <Card>
+          <CardContent>
+            <div className="app__table">
+              <h3>Live Cases by Country</h3>
+              <Table countries={tableData} />
+            </div>
+            <div className="app__graph">
+              <h3>Worldwide New Cases</h3>
+              <div className="app__graph_options">
+                <FormControl className="graph__case_type">
+                  <Select variant="outlined" onChange={onGraphChange} value={graphSetting}>
+                    <MenuItem value="cases">Cases</MenuItem>
+                    <MenuItem value="deaths">Deaths</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl className="graph__time">
+                  <Select variant="outlined" onChange={onTimeChange} value={timeSetting}>
+                    <MenuItem value="week">Weekly</MenuItem>
+                    <MenuItem value="month">Monthly</MenuItem>
+                    <MenuItem value="3month">3 Months</MenuItem>
+                    <MenuItem value="year">Year</MenuItem>
+                    <MenuItem value="all">All</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl className="graph__total_or_daily">
+                  <Select variant="outlined" onChange={onTotalDailyChange} value={totalSetting}>
+                    <MenuItem value="total">Total</MenuItem>
+                    <MenuItem value="daily">Daily Change</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <LineGraph casesType={graphSetting} dataType={totalSetting} timeType={timeSetting}/>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
     </div>
   );
 }

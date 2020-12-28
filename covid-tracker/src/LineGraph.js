@@ -48,15 +48,14 @@ const options = {
     }
 }
 
-function LineGraph({casesType = 'cases', timeType = 'daily'}) {
+function LineGraph({casesType = 'cases', dataType = 'daily', timeType = 'all'}) {
 
     const [data, setData] = useState({});
 
-    const buildChartData = (data, casesType, timeType) => {
+    const buildChartData = (data, casesType, dataType) => {
         const chartData = [];
 
-        if (timeType === 'daily') {
-            console.log("here1")
+        if (dataType === 'daily') {
             let lastDataPoint;
 
             for (let date in data.cases) {
@@ -71,8 +70,7 @@ function LineGraph({casesType = 'cases', timeType = 'daily'}) {
 
                 lastDataPoint = data[casesType][date];
             }
-        } else if (timeType === 'total') {
-            console.log('here2');
+        } else if (dataType === 'total') {
             for (let date in data.cases) {
                 const newDataPoint = {
                     x: date,
@@ -88,17 +86,41 @@ function LineGraph({casesType = 'cases', timeType = 'daily'}) {
     }
 
     useEffect(() => {
-        fetch('https://disease.sh/v3/covid-19/historical/all?lastdays=420')
+
+        let timeRange;
+
+        switch(timeType) {
+            case 'all':
+                timeRange = 'all';
+                break;
+            case 'year':
+                timeRange = '365';
+                break;
+            case '3month':
+                timeRange = '90';
+                break;
+            case 'month':
+                timeRange = '30';
+                break;
+            case 'week':
+                timeRange = '7';
+                break;
+            default:
+                break;
+        }
+        
+        let url = `https://disease.sh/v3/covid-19/historical/all?lastdays=${timeRange}`;
+
+        fetch(url)
         .then(response => response.json())
         .then(data => {
-            const chartData = buildChartData(data, casesType, timeType);
+            const chartData = buildChartData(data, casesType, dataType);
             setData(chartData);
         })
-    }, [casesType, timeType]);
+    }, [casesType, dataType, timeType]);
 
     return (
         <div className="linegraph">
-            <h1>Im a graph</h1>
             {data?.length > 0 && (
                 <Line className="graph"
                 options={options}
