@@ -67,7 +67,7 @@ function App() {
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
 
-    // if the dropdown value is worldwide get all data else get the seleted country data
+    // if the dropdown value is worldwide get all data else get the selected country data
     const url = countryCode === "worldwide"
       ? 'https://disease.sh/v3/covid-19/all'
       : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
@@ -75,10 +75,14 @@ function App() {
     // call the API for the data and set the state with the selected country and the fetched country data
     await fetch(url)
       .then(response => response.json())
-      .then(data => {
+      .then((data) => {
         setCountry(countryCode);
         setCountryInfo(data);
-      })
+        const countryLat = data.countryInfo.lat;
+        const countryLong = data.countryInfo.long;
+        setMapCenter({lat: countryLat, lng: countryLong});
+        setMapZoom(4);
+      });
 
     // https://disease.sh/v3/covid-19/countries/[COUNTRY_CODE]
     // https://disease.sh/v3/covid-19/all
@@ -102,6 +106,8 @@ function App() {
     const timeSettingValue = event.target.value;
     setTimeSetting(timeSettingValue);
   }
+
+  // console.log(mapCenter);
 
   return (
     // app
@@ -132,7 +138,7 @@ function App() {
         </div>
 
         {/* Map (duh) */}
-        <Map center={mapCenter} zoom={mapZoom} />
+        <Map mapCenter={mapCenter} mapZoom={mapZoom} />
 
       </div>
       
