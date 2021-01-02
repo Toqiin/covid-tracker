@@ -24,8 +24,8 @@ function App() {
   const [countryInfo, setCountryInfo] = useState({});
   const [mapCountries, setMapCountries] = useState([]);
   const [tableData, setTableData] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796}); // roughly center of Atlantic Ocean
-  const [mapZoom, setMapZoom] = useState(3);
+  const [mapCenter, setMapCenter] = useState({ lat: 28.033886, lng: 1.659626}); // roughly center of Atlantic Ocean
+  const [mapZoom, setMapZoom] = useState(2);
   const [graphSetting, setGraphSetting] = useState("cases");
   const [totalSetting, setTotalSetting] = useState("daily");
   const [timeSetting, setTimeSetting] = useState("all");
@@ -83,16 +83,25 @@ function App() {
       ? 'https://disease.sh/v3/covid-19/all'
       : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
 
+    console.log(url);
+
     // call the API for the data and set the state with the selected country and the fetched country data
     await fetch(url)
       .then(response => response.json())
       .then((data) => {
         setCountry(countryCode);
         setCountryInfo(data);
-        const countryLat = data.countryInfo.lat;
-        const countryLong = data.countryInfo.long;
-        setMapCenter({lat: countryLat, lng: countryLong});
-        setMapZoom(4);
+        if (countryCode === 'worldwide') {
+          console.log('hjere');
+          setMapCenter({ lat: 28.033886, lng: 1.659626 });
+          setMapZoom(2);
+        } else {
+          const countryLat = data.countryInfo.lat;
+          const countryLong = data.countryInfo.long;
+          setMapCenter({ lat: countryLat, lng: countryLong });
+          setMapZoom(4);
+        }
+
       });
 
     // https://disease.sh/v3/covid-19/countries/[COUNTRY_CODE]
@@ -198,7 +207,7 @@ function App() {
                   </Select>
                 </FormControl>
               </div>
-              <LineGraph casesType={graphSetting} dataType={totalSetting} timeType={timeSetting}/>
+              <LineGraph casesType={graphSetting} dataType={totalSetting} timeType={timeSetting} country={country}/>
             </div>
           </CardContent>
         </Card>

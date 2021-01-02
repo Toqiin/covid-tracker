@@ -12,7 +12,7 @@ function Map({ countries, mapCenter, mapZoom, updateAppCountry }) {
 
     return (
         <div className="map">
-            <LeafletMap key={JSON.stringify(mapCenter)} center={mapCenter} zoom={mapZoom} >
+            <LeafletMap key={JSON.stringify(mapCenter) + mapZoom} center={mapCenter} zoom={mapZoom} >
                 <TileLayer
                     url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png'
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'

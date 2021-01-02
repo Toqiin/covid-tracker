@@ -48,7 +48,7 @@ const options = {
     }
 }
 
-function LineGraph({casesType = 'cases', dataType = 'daily', timeType = 'all'}) {
+function LineGraph({casesType = 'cases', dataType = 'daily', timeType = 'all', country = 'worldwide'}) {
 
     // the graph's state is the data it displays
     const [data, setData] = useState({});
@@ -119,16 +119,27 @@ function LineGraph({casesType = 'cases', dataType = 'daily', timeType = 'all'}) 
             default:
                 break;
         }
-        
-        let url = `https://disease.sh/v3/covid-19/historical/all?lastdays=${timeRange}`;
+
+        let url;
+        if (country === 'worldwide') {
+            url = `https://disease.sh/v3/covid-19/historical/all?lastdays=${timeRange}`;
+        } else {
+            url = `https://disease.sh/v3/covid-19/historical/${country}?lastdays=${timeRange}`;
+        }
+
         // call the API and set the data in the LineGraph state
         fetch(url)
         .then(response => response.json())
         .then(data => {
-            const chartData = buildChartData(data, casesType, dataType);
+            let chartData;
+            if (country === 'worldwide') {
+                chartData = buildChartData(data, casesType, dataType);
+            } else {
+                chartData = buildChartData(data.timeline, casesType, dataType);
+            }
             setData(chartData);
         })
-    }, [casesType, dataType, timeType]);
+    }, [casesType, dataType, timeType, country]);
 
     return (
         <div className="linegraph">
@@ -145,7 +156,6 @@ function LineGraph({casesType = 'cases', dataType = 'daily', timeType = 'all'}) 
                 }}
             />
             )}
-            
         </div>
     )
 }
