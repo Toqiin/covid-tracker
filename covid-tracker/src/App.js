@@ -67,11 +67,11 @@ function App() {
   }, []);
 
   // updates state based on the primary country dropdown
-  const onCountryChange = async (event, map=false) => {
-
+  const onCountryChange = async (event) => {
+    
     let countryCode;
 
-    if (!map) {
+    if (!("countryInfo" in event)) {
       countryCode = event.target.value;
     } else {
       countryCode = event.countryInfo.iso2;
@@ -119,7 +119,7 @@ function App() {
   }
 
   const updateCountry = (country) => {
-    onCountryChange(country, true);
+    onCountryChange(country);
   }
 
   return (
