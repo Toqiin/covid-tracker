@@ -22,12 +22,14 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
+  const [mapCountries, setMapCountries] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796}); // roughly center of Atlantic Ocean
   const [mapZoom, setMapZoom] = useState(3);
   const [graphSetting, setGraphSetting] = useState("cases");
   const [totalSetting, setTotalSetting] = useState("daily");
   const [timeSetting, setTimeSetting] = useState("all");
+  
 
   // https://disease.sh/v3/covid-19/countries
 
@@ -53,7 +55,8 @@ function App() {
             }
           ));
 
-          const sortedData = sortData(data);
+          let sortedData = sortData(data);
+          setMapCountries(data);
           setTableData(sortedData);
           // update the countries state variable 
           setCountries(countries);
@@ -64,8 +67,16 @@ function App() {
   }, []);
 
   // updates state based on the primary country dropdown
-  const onCountryChange = async (event) => {
-    const countryCode = event.target.value;
+  const onCountryChange = async (event, map=false) => {
+
+    let countryCode;
+
+    if (!map) {
+      countryCode = event.target.value;
+    } else {
+      countryCode = event.countryInfo.iso2;
+    }
+    
 
     // if the dropdown value is worldwide get all data else get the selected country data
     const url = countryCode === "worldwide"
@@ -107,7 +118,9 @@ function App() {
     setTimeSetting(timeSettingValue);
   }
 
-  // console.log(mapCenter);
+  const updateCountry = (country) => {
+    onCountryChange(country, true);
+  }
 
   return (
     // app
@@ -138,7 +151,7 @@ function App() {
         </div>
 
         {/* Map (duh) */}
-        <Map mapCenter={mapCenter} mapZoom={mapZoom} />
+        <Map countries={mapCountries} mapCenter={mapCenter} mapZoom={mapZoom} updateAppCountry={(country) => updateCountry(country)} />
 
       </div>
       
