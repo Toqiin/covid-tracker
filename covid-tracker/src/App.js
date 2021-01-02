@@ -92,7 +92,6 @@ function App() {
         setCountry(countryCode);
         setCountryInfo(data);
         if (countryCode === 'worldwide') {
-          console.log('hjere');
           setMapCenter({ lat: 28.033886, lng: 1.659626 });
           setMapZoom(2);
         } else {
@@ -129,6 +128,18 @@ function App() {
 
   const updateCountry = (country) => {
     onCountryChange(country);
+  }
+
+  const getCountryName = (country) => {
+    if (country === 'worldwide') {
+      return 'Worldwide';
+    } else {
+      for (var i = 0; i < countries.length; i++) {
+        if (countries[i].value === country) {
+          return countries[i].name;
+        }
+      }
+    }
   }
 
   return (
@@ -177,7 +188,7 @@ function App() {
 
             {/* Linegraph showing cases/deaths, with options for changing the time range and whether it is total or daily change */}
             <div className="app__graph">
-              <h3>Worldwide New Cases</h3>
+              <h3>{`${getCountryName(country)} Cases Graph`}</h3>
               <div className="app__graph_options">
 
                 {/* Cases/Deaths */}
