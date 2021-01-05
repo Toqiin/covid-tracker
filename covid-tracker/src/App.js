@@ -29,6 +29,8 @@ function App() {
   const [graphSetting, setGraphSetting] = useState("cases");
   const [totalSetting, setTotalSetting] = useState("daily");
   const [timeSetting, setTimeSetting] = useState("all");
+  const [stateData, setStateData] = useState([]);
+  const [USFocus, setUSFocus] = useState(false);
   
 
   // https://disease.sh/v3/covid-19/countries
@@ -40,6 +42,14 @@ function App() {
         setCountryInfo(data);
       });
   }, []);
+
+  useEffect(() => {
+    if (country === 'US') {
+      setUSFocus(true);
+    } else {
+      setUSFocus(false);
+    }
+  }, [country])
 
   // on component load, fetch country data in json format
   useEffect(() => {
@@ -63,7 +73,16 @@ function App() {
         });
     };
 
+    const getStateData = async () => {
+      await fetch("https://disease.sh/v3/covid-19/states")
+        .then((response) => response.json())
+        .then((data) => {
+          setStateData(data);
+        });
+    }
+
     getCountriesData();
+    getStateData();
   }, []);
 
   // updates state based on the primary country dropdown
@@ -82,8 +101,6 @@ function App() {
     const url = countryCode === "worldwide"
       ? 'https://disease.sh/v3/covid-19/all'
       : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
-
-    console.log(url);
 
     // call the API for the data and set the state with the selected country and the fetched country data
     await fetch(url)
@@ -171,7 +188,7 @@ function App() {
         </div>
 
         {/* Map (duh) */}
-        <Map countries={mapCountries} mapCenter={mapCenter} mapZoom={mapZoom} updateAppCountry={(country) => updateCountry(country)} />
+        <Map states={stateData} countries={mapCountries} mapCenter={mapCenter} mapZoom={mapZoom} updateAppCountry={(country) => updateCountry(country)} USFocus={USFocus}/>
 
       </div>
       

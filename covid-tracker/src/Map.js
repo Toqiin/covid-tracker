@@ -3,7 +3,7 @@ import './Map.css';
 import { MapContainer as LeafletMap, TileLayer } from 'react-leaflet';
 import { showDataOnMap } from './util';
 
-function Map({ countries, mapCenter, mapZoom, updateAppCountry }) {
+function Map({ states, countries, mapCenter, mapZoom, updateAppCountry, USFocus }) {
 
     const onCircleClick = (country) => {
         updateAppCountry(country);
@@ -19,7 +19,7 @@ function Map({ countries, mapCenter, mapZoom, updateAppCountry }) {
                     maxZoom='19'
                     minZoom='2'
                 />
-                {showDataOnMap(countries, onCircleClick)}
+                {showDataOnMap(states, countries, onCircleClick, USFocus)}
             </LeafletMap>
         </div>
     )
