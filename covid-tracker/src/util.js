@@ -65,6 +65,12 @@ export const showDataOnMap = (states, data, onCircleClick, USFocus, casesType = 
                             click: () => {
                                 onCircleClick(country);
                             },
+                            mouseover: (e) => {
+                                e.target.openPopup();
+                            },
+                            mouseout: (e) => {
+                                e.target.closePopup();
+                            }
                         }}
                     >
                         <Popup>
@@ -102,6 +108,12 @@ export const showDataOnMap = (states, data, onCircleClick, USFocus, casesType = 
                         click: () => {
                             onCircleClick(country);
                         },
+                        mouseover: (e) => {
+                            e.target.openPopup();
+                        },
+                        mouseout: (e) => {
+                            e.target.closePopup();
+                        }
                     }}
                 >
                     <Popup>
@@ -148,6 +160,14 @@ export const showDataOnMap = (states, data, onCircleClick, USFocus, casesType = 
                         radius={
                             Math.sqrt(state[casesType]) * casesTypeColors[casesType].stateMultiplier
                         }
+                        eventHandlers={{
+                            mouseover: (e) => {
+                                e.target.openPopup();
+                            },
+                            mouseout: (e) => {
+                                e.target.closePopup();
+                            }
+                        }}
                     >
                         <Popup>
                             <div className="info-container">
