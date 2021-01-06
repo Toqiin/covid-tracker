@@ -46,6 +46,19 @@ body {
   padding-top: 1rem;
 }
 
+.app__us_toggle {
+  background-color: white;
+  margin-top: 12px;
+  box-shadow: 0 3px 8px -4px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.app__toggle_formgroup {
+  margin: 0 auto;
+}
+
 
 
 @media (max-width: 1440px) {

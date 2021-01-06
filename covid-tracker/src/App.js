@@ -4,7 +4,11 @@ import {
   FormControl,
   Select,
   Card,
-  CardContent
+  CardContent,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  Container
 } from "@material-ui/core";
 import { useEffect, useState } from 'react';
 import InfoBox from './InfoBox';
@@ -14,6 +18,7 @@ import Table from './Table';
 import { sortData } from './util';
 import LineGraph from './LineGraph';
 import "leaflet/dist/leaflet.css";
+import USTimelineMap from './USTimelineMap';
 
 
 function App() {
@@ -24,14 +29,17 @@ function App() {
   const [countryInfo, setCountryInfo] = useState({});
   const [mapCountries, setMapCountries] = useState([]);
   const [tableData, setTableData] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 28.033886, lng: 1.659626}); // roughly center of Atlantic Ocean
+  const [mapCenter, setMapCenter] = useState({ lat: 28.033886, lng: 1.659626 }); // roughly center of Atlantic Ocean
   const [mapZoom, setMapZoom] = useState(2);
   const [graphSetting, setGraphSetting] = useState("cases");
   const [totalSetting, setTotalSetting] = useState("daily");
   const [timeSetting, setTimeSetting] = useState("all");
   const [stateData, setStateData] = useState([]);
   const [USFocus, setUSFocus] = useState(false);
-  
+  const [isUSHistory, setIsUSHistory] = useState(true);
+  const USCenter = { lat: 38.272689, lng: -99.980447 };
+  const USZoom = 4;
+
 
   // https://disease.sh/v3/covid-19/countries
 
@@ -87,7 +95,7 @@ function App() {
 
   // updates state based on the primary country dropdown
   const onCountryChange = async (event) => {
-    
+
     let countryCode;
 
     if (!("countryInfo" in event)) {
@@ -95,7 +103,7 @@ function App() {
     } else {
       countryCode = event.countryInfo.iso2;
     }
-    
+
 
     // if the dropdown value is worldwide get all data else get the selected country data
     const url = countryCode === "worldwide"
@@ -159,6 +167,10 @@ function App() {
     }
   }
 
+  const toggleUSHistory = (event) => {
+    setIsUSHistory(event.target.checked);
+  }
+
   return (
     // app
     <div className="app">
@@ -167,7 +179,7 @@ function App() {
       <div className="app__left">
         <div className="app__header">
           <h1>COVID-19 Tracker</h1>
-          
+
           {/* Dropdown to choose what country stats are shown for, default worldwide.  */}
           <FormControl className="app__dropdown">
             <Select variant="outlined" onChange={onCountryChange} value={country}>
@@ -187,11 +199,23 @@ function App() {
           <InfoBox title="Deaths" cases={countryInfo.todayDeaths} total={countryInfo.deaths} />
         </div>
 
+        <div className="app__us_toggle">
+          <FormGroup className="app__toggle_formgroup">
+            <FormControlLabel
+              control={<Switch checked={isUSHistory} onChange={toggleUSHistory} />}
+              label="Show US Timeline"
+            />
+          </FormGroup>
+        </div>
+
         {/* Map (duh) */}
-        <Map states={stateData} countries={mapCountries} mapCenter={mapCenter} mapZoom={mapZoom} updateAppCountry={(country) => updateCountry(country)} USFocus={USFocus}/>
+        {isUSHistory
+          ? <USTimelineMap mapCenter={USCenter} mapZoom={USZoom} />
+          : <Map states={stateData} countries={mapCountries} mapCenter={mapCenter} mapZoom={mapZoom} updateAppCountry={(country) => updateCountry(country)} USFocus={USFocus} />
+        }
 
       </div>
-      
+
       {/* App right pane (table, graph) */}
       <div className="app__right">
         <Card>
@@ -235,12 +259,12 @@ function App() {
                   </Select>
                 </FormControl>
               </div>
-              <LineGraph casesType={graphSetting} dataType={totalSetting} timeType={timeSetting} country={country}/>
+              <LineGraph casesType={graphSetting} dataType={totalSetting} timeType={timeSetting} country={country} />
             </div>
           </CardContent>
         </Card>
       </div>
-      
+
     </div>
   );
 }
