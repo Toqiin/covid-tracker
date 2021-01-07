@@ -7,15 +7,14 @@ import {
   CardContent,
   FormGroup,
   FormControlLabel,
-  Switch,
-  Container
+  Switch
 } from "@material-ui/core";
 import { useEffect, useState } from 'react';
 import InfoBox from './InfoBox';
 import Map from './Map';
 import 'fontsource-roboto';
 import Table from './Table';
-import { sortData } from './util';
+import { sortData, fixStatesData } from './util';
 import LineGraph from './LineGraph';
 import "leaflet/dist/leaflet.css";
 import USTimelineMap from './USTimelineMap';
@@ -36,7 +35,9 @@ function App() {
   const [timeSetting, setTimeSetting] = useState("all");
   const [stateData, setStateData] = useState([]);
   const [USFocus, setUSFocus] = useState(false);
-  const [isUSHistory, setIsUSHistory] = useState(true);
+  const [isUSHistory, setIsUSHistory] = useState(false);
+  const [historyUSData, setHistoryUSData] = useState([]);
+
   const USCenter = { lat: 38.272689, lng: -99.980447 };
   const USZoom = 4;
 
@@ -50,6 +51,26 @@ function App() {
         setCountryInfo(data);
       });
   }, []);
+
+  useEffect(() => {
+
+    const getHistoricUS = async () => {
+      let statesData;
+      await fetch("https://disease.sh/v3/covid-19/nyt/states?lastdays=all")
+        .then((response) => response.json())
+        .then((data) => {
+          statesData = data;
+        });
+
+      statesData = fixStatesData(statesData);
+      console.log(statesData);
+      
+    }
+
+    getHistoricUS();
+  }, []);
+
+  
 
   useEffect(() => {
     if (country === 'US') {

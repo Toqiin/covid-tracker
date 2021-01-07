@@ -195,3 +195,24 @@ export const showDataOnMap = (states, data, onCircleClick, USFocus, casesType = 
 
     return countryCircles.concat(stateCircles);
 };
+
+export const fixStatesData = (data) => {
+    // console.log(data);
+    let response = {};
+    let lastDay = {};
+    for (let i = 0; i < data.length; i++) {
+        let stateName = data[i].state;
+        let date = data[i].date;
+        if (!(response.hasOwnProperty(stateName))) {
+            response[stateName] = {};
+            response[stateName][date] = data[i].cases;
+            lastDay[stateName] = data[i].cases;
+        } else {
+            response[stateName][date] = data[i].cases - lastDay[stateName];
+            lastDay[stateName] = data[i].cases;
+        }
+
+    }
+
+    return response;
+}
