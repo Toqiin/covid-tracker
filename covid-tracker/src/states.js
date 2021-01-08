@@ -248,5 +248,30 @@ export const statesPos = [
         "state": "Wyoming",
         "latitude": 42.7475,
         "longitude": -107.2085
-    }
+    },
+    {
+        "state": "District of Columbia",
+        "latitude": 38.9072,
+        "longitude": 77.0369
+    },
+    {
+        "state": "Puerto Rico",
+        "latitude": 18.2208,
+        "longitude": 66.5901
+    },
+    {
+        "state": "Virgin Islands",
+        "latitude": 18.3358,
+        "longitude": 64.8963
+    },
+    {
+        "state": "Guam",
+        "latitude": 13.4443,
+        "longitude": 144.7937
+    },
+    {
+        "state": "Northern Mariana Islands",
+        "latitude": 15.0979,
+        "longitude": 145.6739
+    },
 ]

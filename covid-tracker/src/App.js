@@ -63,7 +63,7 @@ function App() {
         });
 
       statesData = fixStatesData(statesData);
-      console.log(statesData);
+      setHistoryUSData(statesData);
       
     }
 
@@ -231,7 +231,7 @@ function App() {
 
         {/* Map (duh) */}
         {isUSHistory
-          ? <USTimelineMap mapCenter={USCenter} mapZoom={USZoom} />
+          ? <USTimelineMap data={historyUSData} mapCenter={USCenter} mapZoom={USZoom} date={"2021-01-06"}/>
           : <Map states={stateData} countries={mapCountries} mapCenter={mapCenter} mapZoom={mapZoom} updateAppCountry={(country) => updateCountry(country)} USFocus={USFocus} />
         }
 
